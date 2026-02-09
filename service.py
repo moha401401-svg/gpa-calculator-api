@@ -3,6 +3,8 @@ from logic import func
 def insert_gpa(Grades):
     calculated_GPA=func(Grades)
     db=database()
+    if db is None:
+        return {"error": "Database is waking up... try again in 5 seconds"}
     cr=db.cursor()
     l=['name','CS','Math1','Discrete','Elctronics','Creative_thinking','Technical_writing']
     s=['%s']
