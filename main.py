@@ -4,13 +4,6 @@ from connection import Base
 from fastapi.middleware.cors import CORSMiddleware
 
 app=FastAPI(title='Welcome to GPA calcolator')
-@app.get('/')
-def hello():
-    return {'message':'Welcome to GPA calcolator'}
-
-@app.post('/GPA')
-def get(Grades:Base):
-    return insert_gpa(Grades)
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,3 +12,12 @@ app.add_middleware(
     allow_methods=["*"],  
     allow_headers=["*"],
 )
+
+@app.get('/')
+def hello():
+    return {'message':'Welcome to GPA calcolator'}
+
+@app.post('/GPA')
+def get(Grades:Base):
+    return insert_gpa(Grades)
+
