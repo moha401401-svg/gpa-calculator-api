@@ -2,11 +2,11 @@ import mysql.connector as my
 import os
 def database():
     return my.connect(
-        host=os.getenv("MYSQLHOST", "switchyard.proxy.rlwy.net"), 
-        user=os.getenv("MYSQLUSER", "root"),
-        passwd=os.getenv("MYSQLPASSWORD", "xgVCyGuDSUREwbYwJMhWpTvyWrprfXWp"),
+        host=os.getenv("MYSQLHOST"), 
+        user=os.getenv("MYSQLUSER"),
+        password=os.getenv("MYSQLPASSWORD"), 
         port=int(os.getenv("MYSQLPORT", 3306)),
-        database=os.getenv("MYSQLDATABASE", "railway")
+        database=os.getenv("MYSQLDATABASE")
     )
 db=database()
 cr=db.cursor()
