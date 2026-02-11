@@ -2,7 +2,7 @@ from database import database
 from logic import func
 from logic2 import func2
 def insert_gpa(Grades):
-    calculated_GPA=func(Grades)
+    calculated_GPA=float(func(Grades))
     db=database()
     if db is None:
         return {"error": "Database is waking up... try again in 5 seconds"}
@@ -25,7 +25,7 @@ def insert_gpa(Grades):
     return{'Your GPA' : calculated_GPA}
 
 def insert_gpa2(Grades2):
-    calculated_GPA=func2(Grades2)
+    calculated_GPA=float(func2(Grades2))
     db=database()
     if db is None:
         return {"error": "Database is waking up... try again in 5 seconds"}

@@ -45,6 +45,8 @@ def initialize_db():
             GPA DECIMAL(5,2)
         )
         ''')
+       
+
         db.commit()
         cr.close()
         db.close()
@@ -65,8 +67,11 @@ def initialize_db2():
             GPA DECIMAL(5,2)
         )
         ''')
+       
         db.commit()
         cr.close()
         db.close()
         print("✅ Database is ready!")
+
+    
 
