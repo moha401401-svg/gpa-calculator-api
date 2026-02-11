@@ -46,7 +46,9 @@
             color: white; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s;
         }
         button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); }
-        
+        #sectionSelect { margin-bottom: 20px; display: flex; justify-content: space-between; }
+        #sectionSelect button { width: 48%; }
+
         #result {
             margin-top: 25px; padding: 20px; border-radius: 12px; text-align: center;
             display: none; border: 1px solid rgba(255, 255, 255, 0.2);
@@ -54,25 +56,33 @@
         }
         .gpa-value { font-size: 40px; font-weight: bold; margin: 10px 0; }
         .message { font-size: 20px; font-weight: bold; padding: 10px; border-radius: 8px; }
-        
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🎓 GPA Calc</h2>
-    <form id="gpaForm">
+
+    
+    <div id="sectionSelect">
+        <button id="scienceBtn">علمي علوم</button>
+        <button id="mathBtn">علمي رياضة</button>
+    </div>
+
+    
+    <form id="gpaForm" style="display:none;">
+        <h2>🎓 GPA Calc</h2>
         <div class="input-group">
             <label>Name</label>
             <input type="text" id="name" placeholder="Optional">
         </div>
-        <div class="input-group"><label>Computer Science (CS)</label><input type="number" id="CS" required min="0" max="100"></div>
-        <div class="input-group"><label>Math 1</label><input type="number" id="Math1" required min="0" max="100"></div>
-        <div class="input-group"><label>Discrete Math</label><input type="number" id="Discrete" required min="0" max="100"></div>
-        <div class="input-group"><label>Electronics</label><input type="number" id="Elctronics" required min="0" max="100"></div>
-        <div class="input-group"><label>Creative Thinking</label><input type="number" id="Creative_thinking" required min="0" max="100"></div>
-        <div class="input-group"><label>Technical Writing</label><input type="number" id="Technical_writing" required min="0" max="100"></div>
+        <div class="input-group"><label>Computer Science (CS)</label><input type="number" id="CS" required min="0" max="100" step="0.01"></div>
+        <div class="input-group" id="Math1Group"><label>Math 1</label><input type="number" id="Math1" min="0" max="100"step="0.01"></div>
+        <div class="input-group"><label>Discrete Math</label><input type="number" id="Discrete" required min="0" max="100"step="0.01"></div>
+        <div class="input-group"><label>Electronics</label><input type="number" id="Elctronics" required min="0" max="100"step="0.01"></div>
+        <div class="input-group"><label>Creative Thinking</label><input type="number" id="Creative_thinking" required min="0" max="100"step="0.01"></div>
+        <div class="input-group"><label>Technical Writing</label><input type="number" id="Technical_writing" required min="0" max="100"step="0.01"></div>
         <button type="submit">GPA</button>
     </form>
 
@@ -81,13 +91,33 @@
         <div class="gpa-value" id="gpaDisplay">0.00</div>
         <div class="message" id="gpaMessage"></div>
     </div>
+
 </div>
 
 <script>
-    const form = document.getElementById('gpaForm');
+    const scienceBtn = document.getElementById('scienceBtn');
+    const mathBtn = document.getElementById('mathBtn');
+    const gpaForm = document.getElementById('gpaForm');
+    const Math1Group = document.getElementById('Math1Group');
     const resultDiv = document.getElementById('result');
     const gpaDisplay = document.getElementById('gpaDisplay');
     const gpaMessage = document.getElementById('gpaMessage');
+
+    let endpoint = '';
+
+    scienceBtn.onclick = () => {
+        endpoint = 'https://mysql-fastapi-production-a873.up.railway.app/GPA2';
+        gpaForm.style.display = 'block';
+        Math1Group.style.display = 'none';
+        resultDiv.style.display = 'none';
+    };
+
+    mathBtn.onclick = () => {
+        endpoint = 'https://mysql-fastapi-production-a873.up.railway.app/GPA';
+        gpaForm.style.display = 'block';
+        Math1Group.style.display = 'block';
+        resultDiv.style.display = 'none';
+    };
 
     function getMessage(gpa) {
         if (gpa === 4) return { text: "تنين مجنح 🐉", color: "#fbbf24" };
@@ -97,22 +127,23 @@
         return { text: "عملتها إزاي دي؟ 🤔", color: "#ef4444" };
     }
 
-    form.onsubmit = async (e) => {
+    gpaForm.onsubmit = async (e) => {
         e.preventDefault();
-        
+
         const data = {
             name: document.getElementById('name').value || null,
-            CS: parseInt(document.getElementById('CS').value),
-            Math1: parseInt(document.getElementById('Math1').value),
-            Discrete: parseInt(document.getElementById('Discrete').value),
-            Elctronics: parseInt(document.getElementById('Elctronics').value),
-            Creative_thinking: parseInt(document.getElementById('Creative_thinking').value),
-            Technical_writing: parseInt(document.getElementById('Technical_writing').value)
+            CS: parseFloat(document.getElementById('CS').value),
+            Math1: endpoint.includes('GPA') ? parseFloat(document.getElementById('Math1').value) : undefined,
+            Discrete: parseFloat(document.getElementById('Discrete').value),
+            Elctronics: parseFloat(document.getElementById('Elctronics').value),
+            Creative_thinking: parseFloat(document.getElementById('Creative_thinking').value),
+            Technical_writing: parseFloat(document.getElementById('Technical_writing').value)
         };
 
+        Object.keys(data).forEach(key => data[key] === undefined && delete data[key]);
+
         try {
-            
-            const response = await fetch('https://mysql-fastapi-production-a873.up.railway.app/GPA', {
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -120,24 +151,21 @@
 
             if (response.ok) {
                 const result = await response.json();
-                const gpa = parseFloat(result['Your GPA'] || result['GPA']);
-                
-                
+                const gpa = parseFloat(result['Your GPA']);
                 gpaDisplay.innerText = gpa.toFixed(2);
-                
-               
+
                 const msgData = getMessage(gpa);
                 gpaMessage.innerText = msgData.text;
                 gpaMessage.style.color = msgData.color;
                 gpaDisplay.style.color = msgData.color;
-                
+
                 resultDiv.style.display = 'block';
                 resultDiv.scrollIntoView({ behavior: 'smooth' });
             } else {
-                alert('Railway API');
+                alert('API!');
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error(error);
             alert('CORS!');
         }
     };

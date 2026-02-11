@@ -34,12 +34,12 @@ def initialize_db():
         CREATE TABLE IF NOT EXISTS calcs (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(25),
-            CS INT,
-            Math1 INT,
-            Discrete INT,
-            Elctronics INT,
-            Creative_thinking INT,
-            Technical_writing INT,
+            CS FLOAT,
+            Math1 FLOAT,
+            Discrete FLOAT,
+            Elctronics FLOAT,
+            Creative_thinking FLOAT,
+            Technical_writing FLOAT,
             GPA FLOAT
         )
         ''')
@@ -47,3 +47,24 @@ def initialize_db():
         cr.close()
         db.close()
         print("✅ Database is ready!")
+def initialize_db2():
+    db = database()
+    if db:
+        cr = db.cursor()
+        cr.execute('''
+        CREATE TABLE IF NOT EXISTS calcs2 (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(25),
+            CS FLOAT,
+            Discrete FLOAT,
+            Elctronics FLOAT,
+            Creative_thinking FLOAT,
+            Technical_writing FLOAT,
+            GPA FLOAT
+        )
+        ''')
+        db.commit()
+        cr.close()
+        db.close()
+        print("✅ Database is ready!")
+

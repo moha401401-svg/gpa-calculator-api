@@ -1,10 +1,18 @@
 from pydantic import BaseModel
 class Base(BaseModel):
     name:str|None=None
-    CS:int
-    Math1:int
-    Discrete:int
-    Elctronics:int
-    Creative_thinking:int
-    Technical_writing:int
+    CS:float
+    Math1:float
+    Discrete:float
+    Elctronics:float
+    Creative_thinking:float
+    Technical_writing:float
+class Base2(BaseModel):
+    name:str|None=None
+    CS:float
+    Discrete:float
+    Elctronics:float
+    Creative_thinking:float
+    Technical_writing:float
+
 
