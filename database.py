@@ -1,6 +1,8 @@
 import os
 import mysql.connector
+from dotenv import load_dotenv
 from urllib.parse import urlparse
+load_dotenv()
 
 def database():
     try:
@@ -67,4 +69,5 @@ def initialize_db2():
         cr.close()
         db.close()
         print("✅ Database is ready!")
+initialize_db2()
 
